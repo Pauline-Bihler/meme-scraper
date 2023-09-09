@@ -15,6 +15,13 @@ https://stackabuse.com/making-http-requests-in-node-js-with-node-fetch/
 
 Filtering the data:
 
+Downloading an image
+
+Downloading only 10 images
+
+Naming the image 01 - 10.jpg (Padding a number):
+https://stackoverflow.com/questions/10073699/pad-a-number-with-leading-zeros-in-javascript
+
 ## Steps to solve the task
 
 - [x] Create a new repo on Github

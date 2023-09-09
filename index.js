@@ -4,7 +4,7 @@ import fs from 'fs';
 import path from 'path';
 
 // Find a way to make a new directory
-const newDirectory = './memes_directory';
+const newDirectory = './memes';
 const findNewDirectory = () => {
   try {
     if (!fs.existsSync(newDirectory)) {
@@ -14,23 +14,6 @@ const findNewDirectory = () => {
     console.error(err);
   }
 };
-// Function to download an image
-function downloadImage(url, destination) {
-  fetch(url)
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error('Failed to fetch image');
-      }
-      return response.arrayBuffer();
-    })
-    .then((buffer) => {
-      fs.writeFileSync(destination, Buffer.from(buffer));
-      console.log(`Downloaded: ${destination}`);
-    })
-    .catch((error) => {
-      console.error('Error:', error);
-    });
-}
 
 // Find a way to access the website and fetch the HTML data (without Cheerio.load)
 fetch('https://memegen-link-examples-upleveled.netlify.app/')
@@ -48,12 +31,34 @@ fetch('https://memegen-link-examples-upleveled.netlify.app/')
       })
       .get();
 
+    // Function to download an image
+    function downloadImage(url, destination) {
+      fetch(url)
+        .then((response) => {
+          if (!response.ok) {
+            throw new Error('Failed to fetch image');
+          }
+          return response.arrayBuffer();
+        })
+        .then((buffer) => {
+          fs.writeFileSync(destination, Buffer.from(buffer));
+          console.log(`Downloaded: ${destination}`);
+        })
+        .catch((error) => {
+          console.error('Error:', error);
+        });
+    }
+
     // Find a way to just download 10 images
     const downloadLimit = 10;
     for (let i = 0; i < Math.min(downloadLimit, imageSources.length); i++) {
       const imageUrl = imageSources[i];
-      const imageName = `image_${i + 1}.jpg`;
-      const destinationPath = path.join('./memes_directory', imageName);
+
+      const paddedNumber = String(i + 1).padStart(2, '0');
+      const imageName = `${paddedNumber}.jpg`;
+
+      findNewDirectory();
+      const destinationPath = path.join('./memes', imageName);
       downloadImage(imageUrl, destinationPath);
     }
   })
