@@ -3,17 +3,34 @@ import { load } from 'cheerio'; // Import 'load' function from 'cheerio'
 import fs from 'fs';
 import path from 'path';
 
-// Find a way to make a new directory
-const newDirectory = './memes';
-const findNewDirectory = () => {
-  try {
-    if (!fs.existsSync(newDirectory)) {
-      fs.mkdirSync(newDirectory);
-    }
-  } catch (err) {
-    console.error(err);
+// Function to create a new directory if it doesn't exist
+const createDirectoryIfNotExists = (directory) => {
+  if (!fs.existsSync(directory)) {
+    fs.mkdirSync(directory);
   }
 };
+
+// Function to download an image
+const downloadImage = (url, destination) => {
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch image');
+      }
+      return response.buffer();
+    })
+    .then((buffer) => {
+      fs.writeFileSync(destination, buffer);
+      console.log(`Downloaded: ${destination}`);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+};
+
+// Check if the "memes" directory exists or create it
+const newDirectory = './memes';
+createDirectoryIfNotExists(newDirectory);
 
 // Find a way to access the website and fetch the HTML data (without Cheerio.load)
 fetch('https://memegen-link-examples-upleveled.netlify.app/')
@@ -31,24 +48,6 @@ fetch('https://memegen-link-examples-upleveled.netlify.app/')
       })
       .get();
 
-    // Function to download an image
-    function downloadImage(url, destination) {
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch image');
-          }
-          return response.arrayBuffer();
-        })
-        .then((buffer) => {
-          fs.writeFileSync(destination, Buffer.from(buffer));
-          console.log(`Downloaded: ${destination}`);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
-
     // Find a way to just download 10 images
     const downloadLimit = 10;
     for (let i = 0; i < Math.min(downloadLimit, imageSources.length); i++) {
@@ -57,8 +56,7 @@ fetch('https://memegen-link-examples-upleveled.netlify.app/')
       const paddedNumber = String(i + 1).padStart(2, '0');
       const imageName = `${paddedNumber}.jpg`;
 
-      findNewDirectory();
-      const destinationPath = path.join('./memes', imageName);
+      const destinationPath = path.join(newDirectory, imageName);
       downloadImage(imageUrl, destinationPath);
     }
   })
