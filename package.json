@@ -8,10 +8,14 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "author": "",
+  "author": "Pauline",
   "license": "ISC",
   "devDependencies": {
     "eslint-config-upleveled": "^5.0.4",
     "typescript": "^5.2.2"
+  },
+  "dependencies": {
+    "cheerio": "1.0.0-rc.12",
+    "node-fetch": "^3.3.2"
   }
 }
