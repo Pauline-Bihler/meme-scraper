@@ -1,25 +1,42 @@
 import fetch from 'node-fetch';
-import { load } from 'cheerio'; // Import 'load' function from 'cheerio'
+import { load } from 'cheerio';
 import fs from 'fs';
 import path from 'path';
 
-// Find a way to make a new directory
-const newDirectory = './memes';
-const findNewDirectory = () => {
+// Function to create a new directory if it doesn't exist
+const createDirectoryIfNotExists = (directory) => {
   try {
-    if (!fs.existsSync(newDirectory)) {
-      fs.mkdirSync(newDirectory);
+    if (!fs.existsSync(directory)) {
+      fs.mkdirSync(directory);
     }
   } catch (err) {
     console.error(err);
   }
 };
 
+// Function to download an image
+const downloadImage = (url, destination) => {
+  return fetch(url)
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error('Failed to fetch image');
+      }
+      return response.arrayBuffer();
+    })
+    .then((buffer) => {
+      fs.writeFileSync(destination, Buffer.from(buffer));
+      console.log(`Downloaded: ${destination}`);
+    })
+    .catch((error) => {
+      console.error('Error:', error);
+    });
+};
+
 // Find a way to access the website and fetch the HTML data (without Cheerio.load)
 fetch('https://memegen-link-examples-upleveled.netlify.app/')
   .then((response) => response.text())
   .then((html) => {
-    const $ = load(html); // Use the 'load' function to load the HTML
+    const $ = load(html);
 
     // Find the image elements using Cheerio
     const obtainedImageElements = $('img');
@@ -31,34 +48,21 @@ fetch('https://memegen-link-examples-upleveled.netlify.app/')
       })
       .get();
 
-    // Function to download an image
-    function downloadImage(url, destination) {
-      fetch(url)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error('Failed to fetch image');
-          }
-          return response.arrayBuffer();
-        })
-        .then((buffer) => {
-          fs.writeFileSync(destination, Buffer.from(buffer));
-          console.log(`Downloaded: ${destination}`);
-        })
-        .catch((error) => {
-          console.error('Error:', error);
-        });
-    }
+    // Create the "memes" directory if it doesn't exist
+    const newDirectory = './memes';
+    createDirectoryIfNotExists(newDirectory);
+
+    // Function to pad numbers with leading zeros
+    const padNumber = (number) => {
+      return String(number).padStart(2, '0');
+    };
 
     // Find a way to just download 10 images
     const downloadLimit = 10;
     for (let i = 0; i < Math.min(downloadLimit, imageSources.length); i++) {
       const imageUrl = imageSources[i];
-
-      const paddedNumber = String(i + 1).padStart(2, '0');
-      const imageName = `${paddedNumber}.jpg`;
-
-      findNewDirectory();
-      const destinationPath = path.join('./memes', imageName);
+      const imageName = `${padNumber(i + 1)}.jpg`;
+      const destinationPath = path.join(newDirectory, imageName);
       downloadImage(imageUrl, destinationPath);
     }
   })
