@@ -1,8 +1,8 @@
 ## Node.js Meme Scraper
 
-These application scrapes and parses html to let you download 10 images from this website.
-https://memegen-link-examples-upleveled.netlify.app/
-You should see 10 images being downloaded in the command line whenever you run node index.js.
+- These application scrapes and parses html to let you download 10 images from this website.
+- https://memegen-link-examples-upleveled.netlify.app/
+- You should see 10 images being downloaded in the command line whenever you run node index.js.
 
 ## Steps to solve the task
 
