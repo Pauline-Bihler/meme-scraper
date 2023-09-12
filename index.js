@@ -1,7 +1,7 @@
 import fetch from 'node-fetch';
 import { load } from 'cheerio'; // Import 'load' function from 'cheerio'
-import fs from 'fs';
-import path from 'path';
+import fs from 'node:fs';
+import path from 'node:path';
 
 // Find a way to make a new directory
 const newDirectory = './memes';
