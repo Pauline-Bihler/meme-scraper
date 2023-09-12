@@ -20,7 +20,8 @@
 - [x] Export to replit
 
 Resources used:
-Google
+
+- Google
 
 Libraries:
 Node-fetch - https://www.npmjs.com/package/node-fetch?activeTab=readme
